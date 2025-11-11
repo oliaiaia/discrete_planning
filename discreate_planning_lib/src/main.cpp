@@ -26,7 +26,7 @@ void testSmallEnvironment() {
     
     // Создаем Wrapper и вычисляем C-Space
     Wrapper wrapper(rod, environment);
-    auto cspaceMats = wrapper.getCSpace();
+    auto cspaceMats = wrapper.calculateCSpace();
     
     std::cout << "C-Space matrices: " << cspaceMats.size() << std::endl;
     std::cout << "C-Space matrices: " << cspaceMats[0] << std::endl;
@@ -85,7 +85,7 @@ void testMediumEnvironment() {
     std::cout << "Rod configurations: " << rod.size() << std::endl;
     
     Wrapper wrapper(rod, environment);
-    auto cspaceMats = wrapper.getCSpace();
+    auto cspaceMats = wrapper.calculateCSpace();
     
     std::cout << "C-Space matrices: " << cspaceMats.size() << std::endl;
     
@@ -121,7 +121,7 @@ void testCSpaceComputation() {
     };
     
     Wrapper wrapper(rod, environment);
-    auto cspaceMats = wrapper.getCSpace();
+    auto cspaceMats = wrapper.calculateCSpace();
     
     if (!cspaceMats.empty()) {
         std::cout << "C-Space matrix (should show obstacle expanded):" << std::endl;
@@ -178,7 +178,7 @@ void testLargeEnvironment() {
     std::cout << "Environment size: " << environment.size() << "x" << environment[0].size() << std::endl;
     
     Wrapper wrapper(rod, environment);
-    auto cspaceMats = wrapper.getCSpace();
+    auto cspaceMats = wrapper.calculateCSpace();
     
     std::cout << "C-Space matrices: " << cspaceMats.size() << std::endl;
     
@@ -222,7 +222,7 @@ void testObstacleEnvironment() {
     };
     
     Wrapper wrapper(rod, environment);
-    auto cspaceMats = wrapper.getCSpace();
+    auto cspaceMats = wrapper.calculateCSpace();
     
     // Пытаемся найти путь через препятствие (должен обойти)
     std::cout << "Testing path around obstacle: (1,1) to (8,8)" << std::endl;

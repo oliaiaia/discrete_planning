@@ -10,7 +10,6 @@
 
         int rodRows = static_cast<int>(rod[0].size());
         int rodCols = static_cast<int>(rod[0][0].size());
-        std::cout << "Got rod: " << rodRows << "x" << rodCols << std::endl;
 
         for (int t = 0; t < static_cast<int>(rod.size()); ++t) {
             Eigen::MatrixXd rodMat(rodRows, rodCols);
@@ -28,7 +27,6 @@
             for (int j = 0; j < envCols; ++j)
                 environmentMat(i, j) = static_cast<double>(environment[i][j]);
 
-        calculateCSpace();
     }
 
     
@@ -44,7 +42,6 @@
         return x;
     }
 
-    // scipy.signal.convolve2d(..., boundary='symm', mode='same')
     void Wrapper::convolve2d(const Eigen::MatrixXd &environmentMat,
                     const Eigen::MatrixXd &kernelMat,
                     Eigen::MatrixXd &resultMat)
@@ -75,11 +72,16 @@
         }
     }
 
-    void Wrapper::calculateCSpace() {
+    std::vector<Eigen::MatrixXd> Wrapper::calculateCSpace() {
+        
+        std::vector<Eigen::MatrixXd> cSpaceMats;
+        cSpaceMats.reserve(rodMats.size());
+        
         for (const auto &rodPos : rodMats) {
             Eigen::MatrixXd resultMat;
             convolve2d(environmentMat, rodPos, resultMat);
             normalizationMatrix(resultMat);
-            cSpaceMats.push_back(resultMat);
+            cSpaceMats.push_back(std::move(resultMat));
         }
+        return cSpaceMats;
     }

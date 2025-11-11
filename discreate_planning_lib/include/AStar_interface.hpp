@@ -18,8 +18,6 @@ public:
     py::list find_path(int start_x, int start_y, int start_theta,
                       int goal_x, int goal_y, int goal_theta);
     
-    py::list get_cspace() const;
-    
 private:
     std::vector<Eigen::MatrixXd> cspace_mats_;
     HeuristicFunction heuristic_function_;

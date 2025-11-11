@@ -40,6 +40,8 @@ AStar::AStar(int startPosX, int startPosY, int startTetha, int endPosX, int endP
     {
         endNode->prevNode = startNode;
         std::cout << "Start node is equal to end node. Finished the path." << std::endl;
+        std::cout << "Final coast is " << 0 << std::endl;
+        std::cout << "Num of steps is " << 0 << std::endl;
         return;
     }
 
@@ -78,12 +80,6 @@ double AStar::manhattanDistance(std::shared_ptr<Node> node1, std::shared_ptr<Nod
     return (abs(node1->rowNum - node2->rowNum) + abs(node1->colNum - node2->colNum));
 }
 
-// in our case always = 1
-double AStar::eulerDist(const Node& node1, const Node& node2) const
-{
-    return std::sqrt(pow(node1.rowNum - node2.rowNum, 2) + pow(node1.colNum - node2.colNum, 2));
-}
-
 bool AStar::isValidPosition(int row, int col, int theta) const
 {
     if (theta < 0 || theta >= static_cast<int>(cSpaceFull.size())) {
@@ -104,11 +100,11 @@ void AStar::getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std:
 
     // new position
     for (int i = 0; i < 4; ++i) {
-        int newX = currentNode->rowNum + drow[i];
-        int newY = currentNode->colNum + dcol[i];
+        int nextRow = currentNode->rowNum + drow[i];
+        int nextCol = currentNode->colNum + dcol[i];
         
-        if (isValidPosition(newX, newY, currentNode->theta)) {
-            auto newNode = std::make_shared<Node>(newX, newY, currentNode->theta);
+        if (isValidPosition(nextRow, nextCol, currentNode->theta)) {
+            auto newNode = std::make_shared<Node>(nextRow, nextCol, currentNode->theta);
             feasibleNodes.push_back(newNode);
         }
     }
@@ -133,8 +129,10 @@ void AStar::launchAStart()
 
         if (*currentNode == *endNode)
         {
-            endNode->prevNode = currentNode;
+            endNode = currentNode;
             std::cout << "Found the path!" << std::endl;
+            std::cout << "Final cost is " << endNode->lengthFromStart << std::endl;
+            std::cout << "Num of steps is " << steps << std::endl;
             return;
         }
 

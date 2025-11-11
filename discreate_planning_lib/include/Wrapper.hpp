@@ -10,7 +10,7 @@ public:
     Wrapper(const std::vector<std::vector<std::vector<int>>>& rod,
             const std::vector<std::vector<int>>& environment);
 
-    std::vector<Eigen::MatrixXd> getCSpace() const { return cSpaceMats; }
+    std::vector<Eigen::MatrixXd> calculateCSpace();
 
     ~Wrapper() = default;
 
@@ -18,7 +18,6 @@ private:
 
     std::vector<Eigen::MatrixXd> rodMats;
     Eigen::MatrixXd environmentMat;
-    std::vector<Eigen::MatrixXd> cSpaceMats;
 
     void normalizationMatrix(Eigen::MatrixXd &matrixNorm, double threshold = 0.1);
 
@@ -29,5 +28,4 @@ private:
                     const Eigen::MatrixXd &kernelMat,
                     Eigen::MatrixXd &resultMat);
 
-    void calculateCSpace();
 };

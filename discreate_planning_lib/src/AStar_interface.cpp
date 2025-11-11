@@ -77,7 +77,7 @@ PyAStar::PyAStar(const py::list &environment_list,
     auto rod = py_list_to_vector3d_int(rod_list);
 
     Wrapper wrapper(rod, environment);
-    cspace_mats_ = wrapper.getCSpace();
+    cspace_mats_ = wrapper.calculateCSpace();
 
     if (heuristic_type == "manhattan")
     {
@@ -121,19 +121,9 @@ py::list PyAStar::find_path(int start_x, int start_y, int start_theta,
 
     auto plan = astar.getPlan();
 
-    std::cout << "Path finding completed. Path length: " << plan.size() << std::endl;
+    std::cout << "Path length is " << plan.size() << std::endl;
 
     return vector_to_py_list(plan);
-}
-
-py::list PyAStar::get_cspace() const
-{
-    py::list result;
-    for (const auto &matrix : cspace_mats_)
-    {
-        result.append(matrix_to_py_list(matrix));
-    }
-    return result;
 }
 
 py::list find_path_direct(
@@ -157,7 +147,7 @@ py::list compute_cspace_direct(
     auto rod = py_list_to_vector3d_int(rod_list);
 
     Wrapper wrapper(rod, environment);
-    auto cspace_mats = wrapper.getCSpace();
+    auto cspace_mats = wrapper.calculateCSpace();
 
     py::list result;
     for (const auto &matrix : cspace_mats)
@@ -180,9 +170,7 @@ PYBIND11_MODULE(astar_planner, m)
         .def("find_path", &PyAStar::find_path,
              py::arg("start_x"), py::arg("start_y"), py::arg("start_theta"),
              py::arg("goal_x"), py::arg("goal_y"), py::arg("goal_theta"),
-             "Find path from start to goal position")
-        .def("get_cspace", &PyAStar::get_cspace,
-             "Get the C-Space matrices for all orientations");
+             "Find path from start to goal position");
 
     m.def("find_path", &find_path_direct,
           py::arg("environment"), py::arg("rod"),
@@ -197,4 +185,5 @@ PYBIND11_MODULE(astar_planner, m)
 
     m.attr("HEURISTIC_MANHATTAN") = py::str("manhattan");
     m.attr("HEURISTIC_DIJKSTRA") = py::str("dijkstra");
+    m.attr("HEURISTIC_ORIENTATION") = py::str("orientation");
 }
