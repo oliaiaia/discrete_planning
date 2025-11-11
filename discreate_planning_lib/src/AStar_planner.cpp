@@ -12,11 +12,7 @@ AStar::AStar(int startPosX, int startPosY, int startTetha, int endPosX, int endP
         };
     }
 
-    for (const auto &cSpaceMat : cSpaceMats)
-    {
-        CSpace cSpace(cSpaceMat);
-        cSpaceFull.push_back(cSpace);
-    }
+    cSpace = cSpaceMats;
 
     startNode = std::make_shared<Node>(startPosY, startPosX, startTetha);
     startNode->lengthFromStart = 0;
@@ -84,14 +80,14 @@ double AStar::manhattanDistance(std::shared_ptr<Node> node1, std::shared_ptr<Nod
 
 bool AStar::isValidPosition(int row, int col, int theta) const
 {
-    if (theta < 0 || theta >= static_cast<int>(cSpaceFull.size())) {
+    if (theta < 0 || theta >= static_cast<int>(cSpace.size())) {
         return false;
     }
-    if (row < 0 || row >= cSpaceFull[theta].cSpaceMat.rows() || 
-        col < 0 || col >= cSpaceFull[theta].cSpaceMat.cols()) {
+    if (row < 0 || row >= cSpace[theta].rows() || 
+        col < 0 || col >= cSpace[theta].cols()) {
         return false;
     }
-    return cSpaceFull[theta].cSpaceMat(row, col) == 0.0;
+    return cSpace[theta](row, col) == 0.0;
 }
 
 void AStar::getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std::shared_ptr<Node>> &feasibleNodes)
@@ -116,7 +112,7 @@ void AStar::getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std:
     }
 
     // new orientation
-    for (int newTheta = 0; newTheta < static_cast<int>(cSpaceFull.size()); newTheta++) {
+    for (int newTheta = 0; newTheta < static_cast<int>(cSpace.size()); newTheta++) {
         if (newTheta != currentNode->theta && isValidPosition(currentNode->rowNum, currentNode->colNum, newTheta)) {
             auto newNode = std::make_shared<Node>(currentNode->rowNum, currentNode->colNum, newTheta);
             auto [it, inserted] = allNodesMap.insert({*newNode, newNode});
@@ -133,9 +129,10 @@ void AStar::launchAStart()
 {
     while (!Q.empty())
     {
-        steps++;
         auto currentNode = Q.top();
         Q.pop();
+
+        steps++;
 
         if (*currentNode == *endNode)
         {
@@ -167,7 +164,7 @@ void AStar::launchAStart()
                 feasibleNode->lengthFromStart = updatedLenth;
                 feasibleNode->prevNode = currentNode;
                 feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
-                // Q.push(feasibleNode);
+                Q.push(feasibleNode);
             }
         }
     }

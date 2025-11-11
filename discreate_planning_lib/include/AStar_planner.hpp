@@ -18,17 +18,6 @@ struct Position
     int theta;
 };
 
-struct CSpace
-{
-    Eigen::MatrixXd cSpaceMat;
-    Eigen::Matrix<bool, Eigen::Dynamic, Eigen::Dynamic> visitedFlag;
-
-    CSpace(const Eigen::MatrixXd &cSpaceMat) : cSpaceMat(cSpaceMat)
-    {
-        visitedFlag.resize(cSpaceMat.rows(), cSpaceMat.cols());
-        visitedFlag.setConstant(false);
-    }
-};
 
 struct Node
 {
@@ -85,7 +74,7 @@ public:
     std::vector<Position> getPlan();
 
 private:
-    std::vector<CSpace> cSpaceFull;
+    std::vector<Eigen::MatrixXd> cSpace;
     std::priority_queue<std::shared_ptr<Node>, 
                     std::vector<std::shared_ptr<Node>>,
                     std::function<bool(std::shared_ptr<Node>, std::shared_ptr<Node>)>> Q;
