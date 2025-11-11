@@ -26,7 +26,7 @@ struct CSpace
     CSpace(const Eigen::MatrixXd &cSpaceMat) : cSpaceMat(cSpaceMat)
     {
         visitedFlag.resize(cSpaceMat.rows(), cSpaceMat.cols());
-        visitedFlag.setConstant(false); // заполняем false
+        visitedFlag.setConstant(false);
     }
 };
 
@@ -95,13 +95,12 @@ private:
     HeuristicFunction heuristicFunction;
 
     std::unordered_map<Node, std::shared_ptr<Node>> allNodesMap;
-    
+
     int steps = 0;
 
     double manhattanDistance(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2) const;
 
     void getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std::shared_ptr<Node>> &feasibleNodes);
-    // int getSteps();
 
     void launchAStart();
 

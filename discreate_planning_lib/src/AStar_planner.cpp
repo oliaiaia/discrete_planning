@@ -19,9 +19,11 @@ AStar::AStar(int startPosX, int startPosY, int startTetha, int endPosX, int endP
     }
 
     startNode = std::make_shared<Node>(startPosY, startPosX, startTetha);
+    startNode->lengthFromStart = 0;
+    allNodesMap[*startNode] = startNode;
+
     endNode = std::make_shared<Node>(endPosY, endPosX, endTetha);
 
-    startNode->lengthFromStart = 0;
     startNode->heuristic = heuristicFunction(startNode, endNode);
 
 
@@ -105,6 +107,10 @@ void AStar::getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std:
         
         if (isValidPosition(nextRow, nextCol, currentNode->theta)) {
             auto newNode = std::make_shared<Node>(nextRow, nextCol, currentNode->theta);
+            auto [it, inserted] = allNodesMap.insert({*newNode, newNode});
+            if (!inserted) {
+                newNode = it->second;
+            }
             feasibleNodes.push_back(newNode);
         }
     }
@@ -113,6 +119,10 @@ void AStar::getFeasibleNodes(std::shared_ptr<Node> currentNode, std::vector<std:
     for (int newTheta = 0; newTheta < static_cast<int>(cSpaceFull.size()); newTheta++) {
         if (newTheta != currentNode->theta && isValidPosition(currentNode->rowNum, currentNode->colNum, newTheta)) {
             auto newNode = std::make_shared<Node>(currentNode->rowNum, currentNode->colNum, newTheta);
+            auto [it, inserted] = allNodesMap.insert({*newNode, newNode});
+            if (!inserted) {
+                newNode = it->second;
+            }
             feasibleNodes.push_back(newNode);
         }
     }
@@ -142,23 +152,22 @@ void AStar::launchAStart()
         for (auto &feasibleNode : feasibleNodes)
         {
 
-            if (!cSpaceFull[feasibleNode->theta].visitedFlag(feasibleNode->rowNum, feasibleNode->colNum))
-            {
-                cSpaceFull[feasibleNode->theta].visitedFlag(feasibleNode->rowNum, feasibleNode->colNum) = true;
+            double updatedLenth = currentNode->lengthFromStart + 1.0;
 
+            if (feasibleNode->lengthFromStart == 0.0 && feasibleNode != startNode)
+            {
+                feasibleNode->lengthFromStart = updatedLenth;
                 feasibleNode->prevNode = currentNode;
-                feasibleNode->lengthFromStart = currentNode->lengthFromStart + 1; // eulerDist(currentNode, feasibleNode) or 1.0
-                feasibleNode->heuristic = feasibleNode->lengthFromStart + heuristicFunction(feasibleNode, endNode);
+                feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
                 Q.push(feasibleNode);
             }
-            else
+
+            else if (updatedLenth < feasibleNode->lengthFromStart)
             {
-                if (feasibleNode->lengthFromStart > currentNode->lengthFromStart + 1)
-                {
-                    feasibleNode->prevNode = currentNode;
-                    feasibleNode->lengthFromStart = currentNode->lengthFromStart + 1;
-                    feasibleNode->heuristic = feasibleNode->lengthFromStart + heuristicFunction(feasibleNode, endNode);
-                }
+                feasibleNode->lengthFromStart = updatedLenth;
+                feasibleNode->prevNode = currentNode;
+                feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
+                // Q.push(feasibleNode);
             }
         }
     }
