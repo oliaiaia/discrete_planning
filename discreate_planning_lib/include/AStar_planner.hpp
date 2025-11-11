@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <vector>
+#include <set>
 #include <unordered_map>
 #include <iostream>
 #include <queue>
@@ -85,7 +86,7 @@ private:
 
     std::unordered_map<Node, std::shared_ptr<Node>> allNodesMap;
 
-    int steps = 0;
+    int states = 0;
 
     double manhattanDistance(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2) const;
 

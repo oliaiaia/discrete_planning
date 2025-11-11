@@ -7,10 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-find_package(Eigen3 3.3 REQUIRED)
-add_executable(discreate_planning src/AStar_planner.cpp src/Wrapper.cpp src/main.cpp)
-target_link_libraries(discreate_planning Eigen3::Eigen)
-
 
 find_package(Python 3.6 REQUIRED COMPONENTS Interpreter Development)
 find_package(pybind11 CONFIG REQUIRED)

@@ -39,7 +39,7 @@ AStar::AStar(int startPosX, int startPosY, int startTetha, int endPosX, int endP
         endNode->prevNode = startNode;
         std::cout << "Start node is equal to end node. Finished the path." << std::endl;
         std::cout << "Final coast is " << 0 << std::endl;
-        std::cout << "Num of steps is " << 0 << std::endl;
+        std::cout << "Num of states is " << 0 << std::endl;
         return;
     }
 
@@ -132,14 +132,14 @@ void AStar::launchAStart()
         auto currentNode = Q.top();
         Q.pop();
 
-        steps++;
+        states++;
 
         if (*currentNode == *endNode)
         {
             endNode = currentNode;
             std::cout << "Found the path!" << std::endl;
             std::cout << "Final cost is " << endNode->lengthFromStart << std::endl;
-            std::cout << "Num of steps is " << steps << std::endl;
+            std::cout << "Num of states is " << states << std::endl;
             return;
         }
 
@@ -164,7 +164,6 @@ void AStar::launchAStart()
                 feasibleNode->lengthFromStart = updatedLenth;
                 feasibleNode->prevNode = currentNode;
                 feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
-                Q.push(feasibleNode);
             }
         }
     }
