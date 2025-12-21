@@ -148,22 +148,22 @@ void AStar::launchAStart()
 
         for (auto &feasibleNode : feasibleNodes)
         {
-
-            double updatedLenth = currentNode->lengthFromStart + 1.0;
+            double updatedLength = (feasibleNode->theta != currentNode->theta) ? currentNode->lengthFromStart + 0.5 : currentNode->lengthFromStart + 1.0;
 
             if (feasibleNode->lengthFromStart == 0.0 && feasibleNode != startNode)
             {
-                feasibleNode->lengthFromStart = updatedLenth;
+                feasibleNode->lengthFromStart = updatedLength;
                 feasibleNode->prevNode = currentNode;
-                feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
+                feasibleNode->heuristic = updatedLength + heuristicFunction(feasibleNode, endNode);
                 Q.push(feasibleNode);
             }
 
-            else if (updatedLenth < feasibleNode->lengthFromStart)
+            else if (updatedLength < feasibleNode->lengthFromStart)
             {
-                feasibleNode->lengthFromStart = updatedLenth;
+                feasibleNode->lengthFromStart = updatedLength;
                 feasibleNode->prevNode = currentNode;
-                feasibleNode->heuristic = updatedLenth + heuristicFunction(feasibleNode, endNode);
+                feasibleNode->heuristic = updatedLength + heuristicFunction(feasibleNode, endNode);
+                // Q.push(feasibleNode);
             }
         }
     }

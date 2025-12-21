@@ -1,4 +1,4 @@
-# AStar Path Planning Library - Build Instructions
+# AStar Path Planning Library in discreate space
 
 ## Prerequisites
 
@@ -7,41 +7,6 @@
 - Eigen3 3.3 or higher
 - PyBind11
 
-## Installation Steps
-
-### 1. Install Dependencies
-
-**Ubuntu/Debian:**
-```bash
-```
-
-### 2. Build the Library
-
-```bash
-# Create build directory
-mkdir build
-cd build
-
-# Configure with CMake
-cmake ..
-
-# Build the project
-make
-```
-
-### 3. Deploy the Python Module
-
-After successful compilation, copy the generated shared library to your project directory:
-
-```bash
-# Copy the compiled library to your notebook directory
-cp astar_planner*.so /path/to/your/project/
-```
-
-The library file will be named similar to:
-- `astar_planner.cpython-312-x86_64-linux-gnu.so` (Linux)
-
-Place the `.so` file in the same directory as your `main.ipynb` notebook
 
 ## Project Structure
 
@@ -67,6 +32,4 @@ The library provides path planning for 2d-object with orientation constraints.
 ## Result
 
 ![gif](rod_solve.gif)
-
-![comparing](Figure_1.png)
 
